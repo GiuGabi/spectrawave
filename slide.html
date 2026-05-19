@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apresentação SpectraWave - Oscilações e Ondas</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <style>
+        /* ================= PALETA ABELHA ================= */
+        :root {
+            --bg-dark: #050505;
+            --bee-yellow: #FFD600;
+            --bee-yellow-glow: rgba(255, 214, 0, 0.4);
+            --math-faded: rgba(255, 214, 0, 0.15);
+            --math-faded-white: rgba(255, 255, 255, 0.1);
+            --placeholder-red: #ff4444;
+            --code-bg: #0a0a0c;
+        }
+
+        * { box-sizing: border-box; }
+        body { 
+            background-color: #111; margin: 0; padding: 40px 0; 
+            display: flex; flex-direction: column; align-items: center; gap: 60px; 
+            font-family: 'Montserrat', sans-serif; color: #e4e4e7; 
+        }
+
+        /* CONTAINER DO SLIDE */
+        .slide {
+            width: 1280px; height: 720px;
+            background-color: var(--bg-dark);
+            position: relative; overflow: hidden;
+            border: 2px solid #333; box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+            display: flex; flex-direction: column;
+        }
+
+        /* TEXTURA HEXAGONAL */
+        .hex-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='103.92' viewBox='0 0 60 103.92' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 103.92l-30-17.32V34.64L30 17.32l30 17.32v51.96z' fill='%23FFD600' fill-opacity='0.03'/%3E%3C/svg%3E");
+            z-index: 1;
+        }
+
+        /* ================= CSS DA CAPA DIVINA ================= */
+        .math-bg { position: absolute; font-family: 'Cambria Math', serif; font-style: italic; z-index: 2; pointer-events: none; white-space: nowrap; }
+        .math-yellow { color: var(--math-faded); }
+        .math-white { color: var(--math-faded-white); }
+        .eq1 { top: -20px; left: 50px; font-size: 80px; transform: rotate(-5deg); }
+        .eq2 { bottom: 80px; right: -50px; font-size: 110px; transform: rotate(10deg); }
+        .eq3 { top: 300px; left: -100px; font-size: 140px; transform: rotate(-90deg); opacity: 0.08; }
+        .eq4 { top: 150px; right: 100px; font-size: 60px; transform: rotate(15deg); }
+        .eq5 { bottom: -30px; left: 300px; font-size: 90px; }
+        .eq6 { top: 80px; left: 600px; font-size: 45px; }
+        .eq7 { bottom: 250px; right: 400px; font-size: 70px; transform: rotate(-15deg); }
+
+        .cover-content { position: relative; z-index: 10; display: flex; height: 100%; width: 100%; }
+        .left-col { flex: 1.3; display: flex; flex-direction: column; justify-content: center; padding: 80px; background: linear-gradient(90deg, rgba(5,5,5,1) 70%, rgba(5,5,5,0) 100%); }
+        .right-col { flex: 0.7; display: flex; align-items: center; justify-content: center; position: relative; }
+
+        .tagline { color: #fff; font-family: 'Fira Code', monospace; font-size: 18px; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 20px; border-left: 4px solid var(--bee-yellow); padding-left: 15px; }
+        .cover-title { color: var(--bee-yellow); font-size: 85px; font-weight: 900; line-height: 1; margin: 0 0 20px 0; text-transform: uppercase; text-shadow: 0 0 20px var(--bee-yellow-glow); }
+        .cover-title span { color: #fff; display: block; font-size: 50px; font-weight: 700; text-shadow: none; margin-top: 10px; }
+
+        .author-box { margin-top: 50px; border-top: 1px solid #333; padding-top: 25px; display: flex; flex-direction: column; gap: 10px; }
+        .author-box .label { color: var(--bee-yellow); font-family: 'Fira Code', monospace; font-size: 16px; text-transform: uppercase; }
+        .author-box .name { color: #fff; font-size: 15px; font-weight: 500; line-height: 1.6; }
+
+        .hero-graphic { position: absolute; right: 50px; top: 50%; transform: translateY(-50%); width: 600px; height: 500px; filter: drop-shadow(0 0 15px var(--bee-yellow-glow)); }
+
+        /* ================= CSS DOS SLIDES DE CONTEÚDO ================= */
+        .content { position: relative; z-index: 10; padding: 50px 80px; flex-grow: 1; display: flex; flex-direction: column; justify-content: flex-start; }
+        
+        .slide-header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid var(--bee-yellow); padding-bottom: 15px; margin-bottom: 30px; }
+        .slide-title { font-size: 38px; font-weight: 900; color: #fff; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+        .slide-number { font-family: 'Fira Code', monospace; font-size: 20px; font-weight: bold; color: var(--bee-yellow); }
+
+        .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; flex-grow: 1; align-items: stretch; }
+        .col-text { font-size: 22px; line-height: 1.6; color: #ccc; display: flex; flex-direction: column; justify-content: center; }
+        .col-text p { margin-top: 0; margin-bottom: 20px; text-align: justify; }
+        .yellow-txt { color: var(--bee-yellow); font-weight: bold; }
+
+        /* BLOCOS MATEMÁTICOS E CÓDIGO */
+        .math-block { 
+            background: rgba(255, 214, 0, 0.05); border: 1px solid rgba(255, 214, 0, 0.2); 
+            padding: 20px; border-radius: 8px; text-align: center; margin: 15px 0; 
+            font-size: 28px; color: #fff; box-shadow: 0 0 20px rgba(255, 214, 0, 0.1) inset; 
+        }
+        .code-box {
+            background: var(--code-bg); border-left: 4px solid #00ff88;
+            padding: 20px; font-family: 'Fira Code', monospace; color: #aaa;
+            font-size: 16px; border-radius: 4px; overflow-x: auto; line-height: 1.5; margin-bottom: 20px;
+        }
+
+        /* PLACEHOLDERS DE IMAGEM */
+        .img-placeholder {
+            border: 3px dashed var(--placeholder-red); background: rgba(255, 68, 68, 0.08);
+            border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 20px; color: var(--placeholder-red); font-family: 'Fira Code', monospace;
+            width: 100%; height: 100%; min-height: 200px; position: relative; overflow: hidden;
+        }
+        .img-placeholder span { font-size: 20px; font-weight: bold; position: relative; z-index: 2; }
+        .img-placeholder img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; z-index: 5; background: var(--bg-dark); } 
+
+        .list-clean { list-style: none; padding: 0; margin: 0; }
+        .list-clean li { margin-bottom: 15px; position: relative; padding-left: 30px; }
+        .list-clean li::before { content: "→"; position: absolute; left: 0; color: var(--bee-yellow); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="slide">
+        <div class="hex-bg"></div>
+        <div class="math-bg math-yellow eq1">ℱ{f}(ω) = ∫ f(t) e^{-iωt} dt</div>
+        <div class="math-bg math-white eq2">Δx Δp ≥ ℏ/2</div>
+        <div class="math-bg math-yellow eq3">f(x) = (1/2π) ∫ F(k) e^{ikx} dk</div>
+        <div class="math-bg math-white eq4">∇²E = μ₀ε₀(∂²E/∂t²)</div>
+        <div class="math-bg math-yellow eq5">|ψ⟩ = ∫ φ(p)|p⟩ dp</div>
+        <div class="math-bg math-white eq6">iℏ(∂Ψ/∂t) = ĤΨ</div>
+        <div class="math-bg math-yellow eq7">δ(t) = (1/2π) ∫ e^{iωt} dω</div>
+
+        <div class="cover-content">
+            <div class="left-col">
+                <div class="tagline">Oscilações e Ondas</div>
+                <h1 class="cover-title">Fourier<br><span>Transformada</span></h1>
+                
+                <div class="author-box">
+                    <div class="label">Autores do Projeto:</div>
+                    <div class="name">
+                        Gabriela Lima Gomes da Silva<br>
+                        Giulia Gabriela Silva de Freitas<br>
+                        Karoline Gonçalves Ferraz de Campos<br>
+                        Matheus Yoshio Salies Taqueushi<br>
+                        Pablo dos Santos Vargas<br><br>
+                        <span style="color: var(--bee-yellow); font-family: 'Fira Code'; font-size: 14px;">SENAC NAÇÕES UNIDAS</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-col">
+                <svg class="hero-graphic" viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="50" y1="350" x2="450" y2="350" stroke="#333" stroke-width="2" />
+                    <line x1="50" y1="350" x2="150" y2="50" stroke="#333" stroke-width="2" />
+                    <line x1="150" y1="50" x2="480" y2="50" stroke="#333" stroke-width="2" />
+                    <line x1="450" y1="350" x2="450" y2="280" stroke="#333" stroke-width="2" />
+                    
+                    <text x="460" y="355" fill="#FFD600" font-family="Fira Code" font-size="14">Tempo (t)</text>
+                    <text x="160" y="45" fill="#FFF" font-family="Fira Code" font-size="14">Frequência (ω)</text>
+
+                    <path d="M 50 300 Q 80 200 120 300 T 190 300 T 260 300 T 330 300 T 400 300" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="4" />
+                    
+                    <line x1="90" y1="260" x2="170" y2="100" stroke="#FFD600" stroke-width="1" stroke-dasharray="4" opacity="0.5"/>
+                    <line x1="150" y1="300" x2="230" y2="140" stroke="#FFD600" stroke-width="1" stroke-dasharray="4" opacity="0.5"/>
+                    <line x1="230" y1="260" x2="310" y2="100" stroke="#FFD600" stroke-width="1" stroke-dasharray="4" opacity="0.5"/>
+
+                    <path d="M 120 180 Q 150 150 180 180 T 240 180 T 300 180 T 360 180 T 420 180" fill="none" stroke="#FFD600" stroke-width="2" opacity="0.9"/>
+                    <path d="M 150 120 Q 165 90 180 120 T 210 120 T 240 120 T 270 120 T 300 120 T 330 120 T 360 120 T 390 120 T 420 120" fill="none" stroke="#FFD600" stroke-width="1.5" opacity="0.7"/>
+                    
+                    <rect x="220" y="50" width="8" height="80" fill="#FFD600" />
+                    <rect x="300" y="50" width="8" height="40" fill="#FFD600" opacity="0.7" />
+                    <rect x="380" y="50" width="8" height="20" fill="#FFD600" opacity="0.5" />
+                    
+                    <circle cx="224" cy="50" r="6" fill="#FFF" />
+                    <circle cx="304" cy="50" r="4" fill="#FFF" />
+                    <circle cx="384" cy="50" r="3" fill="#FFF" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="hex-bg"></div>
+        <div class="content">
+            <div class="slide-header">
+                <h2 class="slide-title">1. Introdução ao SpectraWave</h2>
+                <div class="slide-number">02 / 20</div>
+            </div>
+            <div class="col-text" style="justify-content: flex-start;">
+                <p>O projeto <span class="yellow-txt">SpectraWave</span> surge como uma ferramenta analítica computacional desenvolvida nativamente para navegadores web. O propósito central do sistema é receber um sinal mecânico ondulatório complexo (arquivo de áudio), isolar suas regiões de máxima densidade energética e realizar o mapeamento completo de seus componentes espectrais.</p>
+                <p>Ao abdicar inteiramente do uso de bibliotecas matemáticas de alto nível prontas, o código implementa algoritmos de Processamento Digital de Sinais (DSP) puramente baseados em álgebra matemática linear discreta e contínua.</p>
+                <p>Isso permite estudar a física dos fenômenos ondulatórios diretamente através do fluxo de dados e da computação em tempo real na máquina do usuário.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="hex-bg"></div>
+        <div class="content">
+            <div class="slide-header">
+                <h2 class="slide-title">2. A Natureza do Som e Discretização</h2>
+                <div class="slide-number">03 / 20</div>
+            </div>
+            <div class="cols">
+                <div class="col-text">
+                    <p>O som consiste em oscilações de pressão. Um microfone converte essa pressão em eletricidade e o computador amostra essa variação milhares de vezes por segundo, gerando um vetor bruto no <span class="yellow-txt">Domínio do Tempo</span>.</p>
+                    <p>No entanto, essa lista sequencial de números não nos revela quais frequências compõem o sinal. Para extrair as "notas puras" escondidas nesse dado, recorremos à teoria formulada por Jean-Baptiste Joseph Fourier.</p>
+                </div>
+                <div class="img-placeholder">
+                    <span>[ TELA INICIAL - DROPZONE ]</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="hex-bg"></div>
+        <div class="content">
+            <div class="slide-header">
+                <h2 class="slide-title">3. A Série de Fourier Contínua</h2>
+                <div class="slide-number">04 / 20</div>
+            </div>
+            <p class="col-text" style="margin-bottom: 10px;">A premissa é que qualquer oscilação periódica pode ser recriada somando-se infinitas ondas puras de senos e cossenos. A equação trigonométrica base é:</p>
+            <div class="math-block">
+                $$f(t) = \frac{a_0}{2} + \sum_{n=1}^{\infty} \left[ a_n \cos(2\pi n f_0 t) + b_n \sin(2\pi n f_0 t) \right]$$
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="hex-bg"></div>
+        <div class="content">
+            <div class="slide-header">
+                <h2 class="slide-title">4. Elementos da Equação Contínua</h2>
+                <div class="slide-number">05 / 20</div>
+            </div>
+            <div class="col-text">
+                <p>Dissecando cada termo da modelagem:</p>
+                <ul class="list-clean">
+                    <li><span class="yellow-txt">$a_0 / 2$:</span> Componente DC. A média aritmética do sinal, indicando se a onda flutua perfeitamente simétrica em torno do zero ou se há um desvio contínuo de eixo.</li>
+                    <li><span class="yellow-txt">$f_0$:</span> A Frequência Fundamental. A taxa de oscilação mais baixa que define o compasso principal da onda.</li>
+                    <li><span class="yellow-txt">$a_n$ e $b_n$:</span> Os coeficientes espectrais. São os "pesos" que ditam a intensidade de cada cosseno ($a_n$) e seno ($b_n$) necessária para reconstruir o sinal.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="hex-bg"></div>
+        <div class="content">
+            <div class="slide-header">
+                <h2 class="slide-title">5. Transformada Discreta de Fourier (DFT)</h2>
+                <div class="slide-number">06 / 20</div>
+            </div>
+            <div class="cols">
+                <div class="col-text">
+                    <p>A Série de Fourier exige um sinal infinito e periódico. Na computação, lidamos com recortes finitos de áudio ($N$ amostras discretas, $x[n]$).</p>
+                    <p>Aplicamos a DFT para converter as amostras temporais no vetor complexo de frequências $X[k]$:</p>
+                    <div class="math-block" style="font-size: 35px;">
+                        $$X[k] = \sum_{n=0}^{N-1} x[n] \cdot e^{-i \frac{2\pi k n}{N}}$$
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="hex-bg"></div>
+        <div class="content">
+            <div class="slide-header">
+                <h2 class="slide-title">6. Identidade de Euler e Rotação</h2>
+                <div class="slide-number">07 / 20</div>
+            </div>
+            <p class="col-text" style="margin-bottom: 10px;">A complexidade da DFT está na exponencial $e^{-i\theta}$. Utilizando a Identidade de Euler, a equação revela seu comportamento geométrico:</p>
+            <div class="math-block">
+                $$X[k] = \underbrace{\sum_{n=0}^{N-1} x[n] \cos\left(\frac{2\pi k n}{N}\right)}_{\text{Eixo Real (a)}} - i \underbrace{\sum_{n=0}^{N-1} x[n] \sin\left(\frac{2\pi k n}{N}\right)}_{\text{Eixo Imaginário (b)}}$$
+            </div>
+            <p class="col-text">O áudio é multiplicado por ondas de teste na frequência $k$, extraindo componentes reias e imaginárias.</p>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="hex-bg"></div>
+        <div class="content">
+            <div class="slide-header">
+                <h2 class="slide-title">7. A Intuição Geométrica</h2>
+                <div class="slide-number">08 / 20</div>
+            </div>
+            <div class="col-text" style="justify-content: flex-start;">
+                <p>Imagine que você enrola a linha do gráfico da sua onda sonora ao redor de um círculo com velocidade de rotação ajustável $k$.</p>
+                <ul class="list-clean">
+                    <li>Se a frequência do áudio <span class="yellow-txt">não coincidir</span> com a velocidade $k$, cristas e vales se anulam mutuamente. O somatório resulta em zero.</li>
+                    <li>Se a frequência do áudio <span class="yellow-txt">coincidir perfeitamente</span> com a rotação $k$, ocorre ressonância matemática. O centro de massa é deslocado, gerando um vetor de alta magnitude.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="hex-bg"></div>
+        <div class="content">
+            <div class="slide-header">
+                <h2 class="slide-title">8. Magnitude e Fase Espectral</h2>
+                <div class="slide-number">09 / 20</div>
+            </div>
+            <div class="cols">
+                <div class="col-text">
+                    <p>A partir das coordenadas cartesianas ($a$ e $b$) geradas pela DFT, extraímos as propriedades físicas reais da acústica:</p>
+                    <div class="math-block" style="font-size: 24px; text-align: left; padding-left: 40px;">
+                        $$\text{Magnitude (Força)} = |X[k]| = \sqrt{a^2 + b^2}$$<br>
+                        $$\text{Fase (Atraso)} = \phi_k = \arctan\left(\frac{b}{a}\right)$$
+                    </div>
+                    <p>O resultado é convertido para notação polar: $X[k] = |X|e^{i\phi}$.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="hex-bg"></div>
+        <div class="content">
+            <div class="slide-header">
+                <h2 class="slide-title">9. Guia de Utilização do Sistema</h2>
+                <div class="slide-number">10 / 20</div>
+            </div>
+            <div class="cols">
+                <div class="col-text">
+                    <ul class="list-clean" style="line-height: 1.8;">
+                        <li><span class="yellow-txt">Input:</span> O usuário arrasta o arquivo. A API \texttt{AudioContext} decodifica os buffers binários.</li>
+                        <li><span class="yellow-txt">Scanner RMS:</span> O algoritmo localiza a região de clímax sonoro, evitando análise de trechos silenciosos.</li>
+                        <li><span class="yellow-txt">Saída de Dados:</span> Renderização de tensores visuais e injeção do relatório KaTeX.</li>
+                    </ul>
+                </div>
+                <div class="img-placeholder">
+                    <span>[ TELA DE CARREGAMENTO ]</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="hex-bg"></div>
+        <div class="content">
+            <div class="slide-header">
+                <h2 class="slide-title">10. Engenharia: FFT Radix-2 (Bit Reversal)</h2>
+                <div class="slide-number">11 / 20</div>
+            </div>
+            <div class="cols" style="grid-template-columns: 1fr 1.2fr;">
+                <div class="col-text">
+                    <p>A equação bruta demanda $O(N^2)$. Para o navegador suportar o cálculo, o \texttt{fft.js} aplica a FFT de Cooley-Tukey.</p>
+                    <p>O primeiro passo é reordenar a memória separando índices pares e ímpares sistematicamente:</p>
+                </div>
+                <div class="code-box">
+let j = 0;
+for (let i = 1; i < n; i++) {
+  let bit = n >> 1;
+  while (j & bit) { j ^= bit; bit >>= 1; }
+  j ^= bit;
+  if (i < j) { 
+    // Inversão espelhada (Bit Reversal)
+    [real[i], real[j]] = [real[j], real[i]];
+    [imag[i], imag[j]] = [imag[j], imag[i]];
+  }
+}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="hex-bg"></div>
+        <div class="content">
+            <div class="slide-header">
+                <h2 class="slide-title">11. Engenharia: Estágio de Borboletas</h2>
+                <div class="slide-number">12 / 20</div>
+            </div>
+            <div class="cols" style="grid-template-columns: 1fr 1.2fr;">
+                <div class="col-text">
+                    <p>Após a reordenação, o algoritmo executa o laço de Borboleta (\textit{Butterfly Stage}).</p>
+                    <p>Subfatias de dados são multiplicadas por fatores de giro (senos e cossenos), reduzindo a complexidade para $O(N \log N)$.</p>
+                </div>
+                <div class="code-box">
+const tReal = wReal * real[idxB] - wImag * imag[idxB];
+const tImag = wReal * imag[idxB] + wImag * real[idxB];
+
+real[idxB] = real[idxA] - tReal;
+imag[idxB] = imag[idxA] - tImag;
+
+real[idxA] += tReal;
+imag[idxA] += tImag;
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="hex-bg"></div>
+        <div class="content">
+            <div class="slide-header">
+                <h2 class="slide-title">12. Engenharia: Integração de Fourier</h2>
+                <div class="slide-number">13 / 20</div>
+            </div>
+            <div class="cols" style="grid-template-columns: 1fr 1.2fr;">
+                <div class="col-text">
+                    <p>O arquivo \texttt{analyzer.js} calcula os coeficientes da Série ($a_n, b_n$) aplicando a \textbf{Regra dos Trapézios}.</p>
+                    <p>A área sob a curva é integrada multiplicando o som pelas funções ortogonais.</p>
+                </div>
+                <div class="code-box">
+for (let n = 1; n <= numHarmonics; n++) {
+  let an = 0, bn = 0;
+  for (let i = 0; i < periodSamples; i++) {
+    const t = i / sampleRate;
+    const omega = 2 * Math.PI * n * fundamentalHz * t;
+    an += samples[i] * Math.cos(omega); // a_n
+    bn += samples[i] * Math.sin(omega); // b_n
+  }
+  an = (2 / periodSamples) * an;
+  bn = (2 / periodSamples) * bn;
+}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="hex-bg"></div>
+        <div class="content">
+            <div class="slide-header">
+                <h2 class="slide-title">13. Estudo de Caso: Audio_Teste.ogg</h2>
+                <div class="slide-number">14 / 20</div>
+            </div>
+            <div class="cols">
+                <div class="col-text">
+                    <p>Para comprovar a física ondulatória do modelo e validar os dados gerados, submetemos um sinal físico ao ambiente de análise.</p>
+                    <p>O sistema processa as propriedades estruturais de armazenamento para iniciar os cálculos.</p>
+                </div>
+                <div class="img-placeholder" style="height: 180px;">
+                    <span>[ IDENTIFICAÇÃO DO ARQUIVO ]</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="hex-bg"></div>
+        <div class="content">
+            <div class="slide-header">
+                <h2 class="slide-title">14. Análise Gráfica Visual</h2>
+                <div class="slide-number">15 / 20</div>
+            </div>
+            <div class="img-placeholder" style="height: 350px; margin-bottom: 20px;">
+                <span>[ GRÁFICOS DE TEMPO E FREQUÊNCIA ]</span>
+            </div>
+            <div class="cols" style="align-items: flex-start; gap: 30px;">
+                <div class="col-text" style="font-size: 18px;">
+                    <strong class="yellow-txt">Tempo:</strong> O gráfico exibe o clímax RMS detectado aos $683\text{ ms}$. Observa-se a presença de oscilações senoidais densas, seguidas por uma dissipação de amplitude (amortecimento).
+                </div>
+                <div class="col-text" style="font-size: 18px;">
+                    <strong class="yellow-txt">Frequência:</strong> O resultado da FFT revela um pico ressonante acentuado pouco acima de $100\text{ Hz}$ e um decaimento abrupto nos agudos.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="hex-bg"></div>
+        <div class="content">
+            <div class="slide-header">
+                <h2 class="slide-title">15. Dissecação das Métricas Numéricas</h2>
+                <div class="slide-number">16 / 20</div>
+            </div>
+            <div class="img-placeholder" style="height: 160px; margin-bottom: 30px;">
+                <span>[ PAINEL DE MÉTRICAS AMARELO ]</span>
+            </div>
+            <div class="cols" style="align-items: flex-start;">
+                <div class="col-text" style="font-size: 18px;">
+                    <ul class="list-clean">
+                        <li><strong class="yellow-txt">Amostragem ($f_s$):</strong> $48.000\text{ Hz}$. A onda foi fatiada $48$ mil vezes por segundo.</li>
+                        <li><strong class="yellow-txt">Nyquist ($f_s/2$):</strong> O limite acústico suportado sem distorção é $24.000\text{ Hz}$.</li>
+                        <li><strong class="yellow-txt">Resolução ($\Delta f$):</strong> A janela de $N=32768$ isola o áudio em compartimentos de $1.46\text{ Hz}$.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="hex-bg"></div>
+        <div class="content">
+            <div class="slide-header">
+                <h2 class="slide-title">16. Desempenho e Otimização Radix-2</h2>
+                <div class="slide-number">17 / 20</div>
+            </div>
+            <div class="col-text" style="justify-content: flex-start;">
+                <p>O painel numérico revelou a economia de processamento do algoritmo empregado:</p>
+                <div class="cols" style="margin-bottom: 20px;">
+                    <div class="math-block" style="font-size: 20px;">
+                        $\text{DFT Clássica } O(N^2):$<br>
+                        $32768^2 \approx \text{1 Bilhão de Op.}$
+                    </div>
+                    <div class="math-block" style="font-size: 20px; border-color: #00ff88;">
+                        $\text{FFT Radix-2 } O(N \log_2 N):$<br>
+                        $32768 \times 15 = 491.520 \text{ Op.}$
+                    </div>
+                </div>
+                <p style="text-align: center; color: #00ff88; font-weight: bold; font-size: 28px;">
+                    Subtração: $1.073.250.304$ Operações Poupadas!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="hex-bg"></div>
+        <div class="content">
+            <div class="slide-header">
+                <h2 class="slide-title">17. A Harmônica Fundamental (Bin 167)</h2>
+                <div class="slide-number">18 / 20</div>
+            </div>
+            <div class="cols" style="align-items: flex-start; gap: 30px;">
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <div class="img-placeholder" style="height: 120px;">
+                        <span>[ CABEÇALHO DA DFT ]</span>
+                    </div>
+                    <div class="img-placeholder" style="height: 180px;">
+                        <span>[ TABELA DFT - FUNDAMENTAL ]</span>
+                    </div>
+                </div>
+                <div class="col-text" style="font-size: 18px; justify-content: flex-start;">
+                    <p>A máxima densidade espectral localizou-se no índice $k=167$. Multiplicando pela resolução, obtemos a frequência base:</p>
+                    <div class="math-block" style="font-size: 20px; padding: 10px;">$f_0 = 167 \times 1.4648 = 244.63\text{ Hz}$</div>
+                    <p>A Equação Polar de ressonância gerada pelo sistema para este bin foi:</p>
+                    <div class="math-block" style="font-size: 20px; padding: 10px;">$X[167] \approx -283.85 - 55.69i = 289.26e^{i(-2.948)}$</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="hex-bg"></div>
+        <div class="content">
+            <div class="slide-header">
+                <h2 class="slide-title">18. Série Trigonométrica Expandida</h2>
+                <div class="slide-number">19 / 20</div>
+            </div>
+            <div class="cols" style="align-items: flex-start; gap: 30px;">
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <div class="img-placeholder" style="height: 120px;">
+                        <span>[ CABEÇALHO SÉRIE DE FOURIER ]</span>
+                    </div>
+                    <div class="img-placeholder" style="height: 180px;">
+                        <span>[ EQUAÇÃO E TABELA FOURIER ]</span>
+                    </div>
+                </div>
+                <div class="col-text" style="font-size: 18px; justify-content: flex-start;">
+                    <p>A matriz de coeficientes contínuos corrobora a Transformada Discreta.</p>
+                    <ul class="list-clean">
+                        <li>Componente DC estritamente baixo ($0.000181$), validando simetria.</li>
+                        <li>Atenuação exponencial imediata das harmônicas superiores ($n=2, n=3$).</li>
+                        <li><span class="yellow-txt">Conclusão Física:</span> O arquivo de teste caracteriza-se como um som puramente senoidal.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="hex-bg"></div>
+        <div class="content" style="align-items: center; justify-content: center; text-align: center;">
+            <h1 style="font-size: 80px; color: var(--bee-yellow); font-weight: 900; margin: 0; text-transform: uppercase;">CONCLUSÃO</h1>
+            <div style="height: 4px; width: 150px; background: var(--bee-yellow); margin: 30px auto;"></div>
+            <p style="font-size: 26px; color: #fff; max-width: 900px; line-height: 1.6;">
+                O SpectraWave comprova na prática que a física ondulatória e os modelos matemáticos complexos podem ser aplicados nativamente no ambiente web, unindo ciência rigorosa e engenharia de software de alta performance.
+            </p>
+            <div style="margin-top: 50px; font-family: 'Fira Code', monospace; color: #555; letter-spacing: 2px;">
+                MUITO OBRIGADO!
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false}
+                ],
+                throwOnError : false
+            });
+        });
+    </script>
+</body>
+</html>
